@@ -1,0 +1,72 @@
+---
+title: "LAB_8_24"
+output: html_document
+date: "2025-10-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Hecho con gusto por  Luis Armando González Arellano 
+LABORATORIO - RELACIONAMIENTO "CASO HIPOTÉTICO" 
+
+ Objetivo: Estimar el relacionamiento (relatedness, proximidad, métrica de distancia entre productos)
+ ------------------------------------------------------------------------------------------------------
+ En este ejercicio vamos a:
+1. Cargar nuestra matriz hipotética de datos
+2. Calcular co ocurrencias entre personas y productos 
+3. Estimar el relacionamiento, teniendo como input las co ocurrencias
+4. Graficar
+
+```{r}
+library (EconGeo)
+
+```
+1.Cómo se mide la proximidad (relatedness) para crear el espacio producto
+```{r}
+M= as.matrix(read.csv("https://raw.githubusercontent.com/PABalland/ON/master/amz.csv", sep= ",", header= T, row.names=1))
+
+M = as.matrix(
+  read.csv("https://raw.githubusercontent.com/PABalland/ON/master/amz.csv" , 
+           sep = ",", 
+           header = T, 
+           row.names = 1))
+M
+
+```
+co-ocurrencia entre personas/paises/estados
+```{r}
+co_occurrence(M)
+
+```
+ co-ocurrencia entre productos t es transpuesta
+```{r}
+c= co_occurrence(t(M))
+c
+```
+estima el relacionamiento o proximidad pero normalizado, para asegurar que el numero de co ocurrencias que observamos
+ es mayor al numero de co ocurrencias probables (probailidad condicional)
+```{r}
+r=relatedness(c)
+r
+```
+ 
+ 
+ 
+#tie and Surfboard puede que no esten tan relacionados, abajo de  1 no es relacionado mientras que mayor a 1 si es relacionado
+```{r}
+r[r<1] =0
+r[r>1] =1
+r
+```
+```{r}
+library(igraph)
+```
+graficar matriz de adyacientes
+```{r}
+g1= graph_from_adjacency_matrix(r, mode= "undirected")
+plot(g1)
+```
+
+
