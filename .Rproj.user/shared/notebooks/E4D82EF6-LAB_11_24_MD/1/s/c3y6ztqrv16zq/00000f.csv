@@ -1,0 +1,8 @@
+"0","M = as.matrix(
+  read.csv(""relatednessbinario"", 
+           sep = "","", 
+           header = T, 
+           row.names = 1))
+"
+"2","Error en file(file, ""rt""): no se puede abrir la conexión
+"

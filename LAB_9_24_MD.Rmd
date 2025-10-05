@@ -1,0 +1,92 @@
+---
+title: "lab_9_24"
+output: html_document
+date: "2025-10-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Alumno_ Luis Armando González Arellano
+T1_03_ESPACIO PRODUCTO(2) - RELACIONAMIENTO "CASO REAL": EXPORTACIONES HIDALGUENSES
+
+Objetivo: Estimar el relacionamiento (relatedness, proximidad, métrica de distancia entre productos)
+------------------------------------------------------------------------------------------------------
+n este ejercicio vamos a:
+1. Cargar nuestra matriz de datos
+2. Calcular co ocurrencias entre lugares y productos 
+3. Estimar el relacionamiento, teniendo como input las co ocurrencias
+4. Graficar
+5. Exportar los resultados para trabajarlos con cytoscape o gephi
+#######################################
+practica 2: exportaciones hidalguenses #
+```{r}
+library (EconGeo)
+
+```
+#seleccionar archivo 
+```{r}
+M = as.matrix(
+  read.csv("rca_2014.csv" , 
+           sep = ",", 
+           header = T, 
+           row.names = 1))
+
+```
+Ver  datos de la matriz en el rango 1:10
+```{r}
+head (M[,1:10])
+
+```
+
+Ver las dimensiones de la matriz 
+```{r}
+dim (M)
+
+```
+co-ocurrencia entre personas/paises/estados
+```{r}
+co_occurrence(M)
+```
+co-ocurrencia entre productos t es transpuesta
+```{r}
+c=co_occurrence(t(M))
+c
+```
+estima el relacionamiento o proximidad pero normalizado, para asegurar que el numero de co ocurrencias que observamos  es mayor al numero de co ocurrencias probables (probailidad condicional)
+tie and Surfboard puede que no esten tan relacionados, abajo de  1 no es relacionado mientras que mayor a 1 si es relacionado.
+```{r}
+r=relatedness(c)
+r
+```
+
+opcional (sólo para trabajar con datos binarios)
+```{r}
+r[r<1] = 0
+r[r>1] = 1
+```
+
+```{r}
+library (igraph)
+```
+Graficar 
+```{r}
+g1= graph_from_adjacency_matrix(r,mode="undirected")
+
+plot(g1)
+```
+exportar resultados del relacionamiento binario
+```{r}
+write.csv (r,file= "relatedness.csv")
+
+```
+
+exportar resultados de co ocurrencias
+```{r}
+write.csv(c, file="coocurrence.csv")
+
+```
+
+
+
